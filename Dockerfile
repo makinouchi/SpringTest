@@ -1,8 +1,14 @@
-FROM amazoncorretto:17 AS build
-COPY ./ /home/app
-RUN cd /home/app && ./gradlew build
+# from the base image of a jdk 11 container on Ubuntu 20.04.
+FROM adoptopenjdk/openjdk11:x86_64-ubuntu-jdk-11.0.18_10-slim
 
-FROM amazoncorretto:17-alpine
-COPY --from=build /home/app/build/libs/SmapleWeb-0.0.1-SNAPSHOT.jar /usr/local/lib/SmapleWeb.jar
+# create a work dir.
+WORKDIR /app
+
+# copy a jvm app.
+COPY target/*.jar app.jar
+
+# open port 8080 for a jvm app.
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","-Dfile.encoding=UTF-8","/usr/local/lib/SmapleWeb.jar"]
+
+# startup a jvm app.
+ENTRYPOINT ["java","-jar","app.jar"]
