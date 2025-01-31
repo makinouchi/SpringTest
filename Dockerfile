@@ -7,6 +7,9 @@ WORKDIR /app
 # プロジェクトのソースコードをコンテナにコピー
 COPY . .
 
+# Gradle Wrapper（gradlew）に実行権限を付与
+RUN chmod +x ./gradlew
+
 # Gradleを実行してアプリをビルド
 RUN ./gradlew bootJar
 
