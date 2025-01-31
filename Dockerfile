@@ -11,4 +11,4 @@ COPY . .
 RUN chmod +x ./gradlew
 
 # Gradleを実行してアプリをビルド（ログを出力しやすくする）
-RUN ./gradlew bootJar --no-daemon
+RUN ./gradlew bootJar --stacktrace --info
