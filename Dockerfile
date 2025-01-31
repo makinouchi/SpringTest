@@ -1,8 +1,23 @@
-FROM amazoncorretto:17 AS build
-COPY ./ /home/app
-RUN cd /home/app && ./gradlew build
+# 使用するベースイメージ（JDK 17）
+FROM eclipse-temurin:17-jdk AS build
 
-FROM amazoncorretto:17-alpine
-COPY --from=build /home/app/build/libs/SampleWeb-0.0.1-SNAPSHOT.jar /usr/local/lib/SampleWeb.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","-Dfile.encoding=UTF-8","/usr/local/lib/SampleWeb.jar"]
+# 作業ディレクトリを作成
+WORKDIR /app
+
+# プロジェクトのソースコードをコンテナにコピー
+COPY . .
+
+# Gradleを実行してアプリをビルド
+RUN ./gradlew bootJar
+
+# 実行用の軽量イメージを使用（JREのみ）
+FROM eclipse-temurin:17-jre
+
+# 作業ディレクトリを作成
+WORKDIR /app
+
+# ビルド済みのJARファイルをコピー
+COPY --from=build /app/build/libs/*.jar app.jar
+
+# アプリを実行
+CMD ["java", "-jar", "app.jar"]
