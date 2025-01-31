@@ -1,5 +1,5 @@
 # 使用するベースイメージ（JDK 21）
-FROM eclipse-temurin:23-jdk AS build
+FROM eclipse-temurin:21-jdk AS build
 
 # 作業ディレクトリを作成
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew bootJar
 
 # 実行用の軽量イメージを使用（JREのみ）
-FROM eclipse-temurin:23-jre
+FROM eclipse-temurin:21-jre
 
 # 作業ディレクトリを作成
 WORKDIR /app
